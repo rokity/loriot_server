@@ -8,7 +8,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 app.get('/', (req, res) => {
   client.connect(err => {
-    let dbo = client.db("myFirstDatabase").collection("devices");
+    let dbo = client.db("myFirstDatabase");
     dbo.createCollection("customers", function(err, res) {
       if (err) throw err;
       console.log("Collection created!");

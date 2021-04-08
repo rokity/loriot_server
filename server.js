@@ -15,8 +15,6 @@ app.get('/', (req, res) => {
       res.send("collection created")
       db.close();
     });
-    // perform actions on the collection object
-    client.close();
   });
   
 })

@@ -17,8 +17,7 @@ client.connect(err => {
 });
 
 app.post('/webhook', (req, res) => {
-  var body = req.body
-  dbo.collection("logs").insertOne(body, function (err, res) {
+  db.collection("logs").insertOne(req.body, function (err, res) {
     if (err) throw err;
     console.log("1 document inserted");
   });

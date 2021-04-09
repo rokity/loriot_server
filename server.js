@@ -4,7 +4,7 @@ const port  = process.env.PORT || 80;
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://ciao:ciao@cluster0.zofui.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
+console.log("ciao")
 
 app.get('/', (req, res) => {
   client.connect(err => {

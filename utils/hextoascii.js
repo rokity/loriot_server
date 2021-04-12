@@ -1,4 +1,4 @@
-export default function hex_to_ascii(str1)
+exports.hex_to_ascii=(str1) =>
 {
    var hex  = str1.toString();
    var str = '';

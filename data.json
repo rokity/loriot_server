@@ -1,0 +1,33 @@
+{
+    "cmd": "rx",
+    "seqno": {
+        "$numberInt": "13189"
+    },
+    "EUI": "C0EE400001025558",
+    "ts": {
+        "$numberDouble": "1617964119512.0"
+    },
+    "fcnt": {
+        "$numberInt": "4056"
+    },
+    "port": {
+        "$numberInt": "2"
+    },
+    "freq": {
+        "$numberInt": "867100000"
+    },
+    "rssi": {
+        "$numberInt": "-44"
+    },
+    "snr": {
+        "$numberInt": "9"
+    },
+    "toa": null,
+    "dr": "SF7 BW125 4/5",
+    "ack": false,
+    "bat": {
+        "$numberInt": "254"
+    },
+    "offline": false,
+    "data": "43"
+}

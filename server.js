@@ -20,18 +20,17 @@ client.connect(err => {
 });
 
 app.post('/webhook', (req, res) => {
-  if (req.body['EUI'] == nodo_digitale_eui) {
-    if (hex_to_ascii(req.body['data']) == 'C') {
-      //Accensione
-      getInfo();
+  if(req.body['data'].substring(0,2)!="75")
+  {
+    if (req.body['EUI'] == nodo_digitale_eui) {
+      if (hex_to_ascii(req.body['data']) == 'C') {
+        //Accensione
+        getInfo();
+      }
+      
+      
     }
-    // db.collection("logs").insertOne(req.body, function (err, res) {
-    //   if (err) throw err;
-    //   //After save message
-    //   console.log("insert 1 row  on collection")
-
-    // });
-  }
+  } 
 
 })
 

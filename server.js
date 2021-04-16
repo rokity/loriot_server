@@ -29,7 +29,7 @@ app.post('/webhook', (req, res) => {
       if (hex_to_ascii(data) == 'C' && flag_get_info==false) flag_get_info=true;getInfo(nodo_digitale_eui,appid); //Accensione
       if(data.length>12 && parseInt(data.substring(0, 2))>-1 && parseInt(data.substring(0, 2))<30)  scanSensori(db,data,req.body['EUI'])     //Scansione Sensori   
     }
-  return res.statusCode(200)
+  return res.sendStatus(200)
 })
 
 

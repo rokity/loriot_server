@@ -13,7 +13,7 @@ const nodo_digitale_eui = "C0EE400001025558"
 const appid="BE7A2562"
 var db;
 
-let flag_get_info=falseM
+let flag_get_info=false;
 
 
 client.connect(err => {

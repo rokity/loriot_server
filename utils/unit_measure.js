@@ -1,0 +1,13 @@
+exports.unit_measure={
+    0:-1,
+    1:'mV',
+    2:'bar',
+    3:'mbar',
+    4:'atm',
+    5:'psi',
+    6:'Pa',
+    7:'kPa',
+    8:'MPa',
+    9:'mmH2O',
+    27:'Sinα'
+}

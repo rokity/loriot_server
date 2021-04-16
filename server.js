@@ -1,7 +1,9 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
 const hex_to_ascii = require("./utils/hextoascii.js").hex_to_ascii;
-const getInfo = require("./utils/getinfo").getInfo;
+const getInfo = require("./utils/get_info").getInfo;
+const scanSensori = require("./utils/scan_sensori").scanSensori;
+
 const app = express()
 app.use(express.json());
 const port = process.env.PORT || 3000;
@@ -20,18 +22,11 @@ client.connect(err => {
 });
 
 app.post('/webhook', (req, res) => {
-  if(req.body['data'].substring(0,2)!="75")
-  {
-    if (req.body['EUI'] == nodo_digitale_eui) {
-      if (hex_to_ascii(req.body['data']) == 'C') {
-        //Accensione
-        getInfo();
-      }
-      
-      
+  const data=req.body['data']
+ if (req.body['EUI'] == nodo_digitale_eui && data.substring(0,2)!="75" && data!="62") {
+      if (hex_to_ascii(data) == 'C') getInfo(nodo_digitale_eui,appid); //Accensione
+      if(data.length>12 && parseInt(data.substring(0, 2))>-1 && parseInt(data.substring(0, 2))<30)  scanSensori(db,data,req.body['EUI'])     //Scansione Sensori   
     }
-  } 
-
 })
 
 

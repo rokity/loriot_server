@@ -23,7 +23,7 @@ client.connect(err => {
 
 app.post('/webhook', (req, res) => {
   const data=req.body['data']
- if (req.body['EUI'] == nodo_digitale_eui && data.length>0) {
+ if (req.body['EUI'] == nodo_digitale_eui && data!=undefined) {
       if (hex_to_ascii(data) == 'C') getInfo(nodo_digitale_eui,appid); //Accensione
       if(data.length>12 && parseInt(data.substring(0, 2))>-1 && parseInt(data.substring(0, 2))<30)  scanSensori(db,data,req.body['EUI'])     //Scansione Sensori   
     }

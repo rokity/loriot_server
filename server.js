@@ -1,5 +1,6 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
+var mongo = require('mongodb');
 const hex_to_ascii = require("./utils/hextoascii.js").hex_to_ascii;
 const getInfo = require("./utils/get_info").getInfo;
 const scanSensori = require("./utils/scan_sensori").scanSensori;
@@ -9,11 +10,10 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 const uri = "mongodb+srv://ciao:ciao@cluster0.zofui.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-const nodo_digitale_eui = "C0EE400001025558"
-const appid="BE7A2562"
+const appid = "BE7A2562"
 var db;
 
-let flag_get_info=false;
+let flag_get_info = false;
 
 
 client.connect(err => {
@@ -24,14 +24,44 @@ client.connect(err => {
 });
 
 app.post('/webhook', (req, res) => {
-  const data=req.body['data']
- if (req.body['EUI'] == nodo_digitale_eui && data!=undefined) {
-      if (hex_to_ascii(data) == 'C' && flag_get_info===false) {
-        flag_get_info=true;
-        getInfo(nodo_digitale_eui,appid); //Accensione
-      }
-      else if(data.length>12 && parseInt(data.substring(0, 2))>-1 && parseInt(data.substring(0, 2))<30)  scanSensori(db,data,req.body['EUI'])     //Scansione Sensori   
-    }
+  const data = req.body['data']
+  if (hex_to_ascii(data) == 'C') getInfo(req.body['EUI'], appid); //Accensione
+  else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
+  return res.sendStatus(200)
+})
+
+app.post('/insert_structure', (req, res) => {
+  const name = req.body['name']
+  const address = req.body['address']
+  const installDate = req.body['installDate']
+  const coordinates = req.body['coordinates']
+  const fddEnabled = req.body['fddEnabled']
+  const type = req.body['type']
+  const userConfig = req.body['userConfig']
+  const spans = req.body["spans"]
+  const sensors = req.body["sensors"]
+  const structure = {
+    name: name, address: address, installDate: installDate, coordinates: coordinates, fddEnabled: fddEnabled,
+    type: type, userConfig: userConfig, spans: spans, sensors: sensors
+  }
+  db.collection("structures").insertOne(structure, function (err, res) {
+    if (err) throw err;
+    //After save message
+    console.log("insert 1 row  on collection")
+  });
+  return res.sendStatus(200)
+})
+
+
+app.post('/insert_sensor', (req, res) => {
+  const eui = req.body['eui']
+  const structure_id = req.body["structure_id"]
+  var _id = new mongo.ObjectID(structure_id);
+  const query = { "_id": _id }
+  var new_values = { $push: { sensors: { eui: eui } } };
+  db.collection("structures").updateOne(query, new_values, (err, res) => {
+    console.log(res)
+  })
   return res.sendStatus(200)
 })
 

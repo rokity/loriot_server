@@ -14,17 +14,16 @@ exports.scanSensori = (db, data, eui) => {
         _units.push(unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)])
     }
     const sensors = {$set : {
-        eui: eui,
-        date: new Date(), 
-        sensor_index: _sensor_index,
-        serial_number: _serial_number,
-        num_channels: num_ch,
-        units: _units
+        "sensors.$.date": new Date(), 
+        "sensors.$.sensor_index": _sensor_index,
+        "sensors.$.serial_number": _serial_number,
+        "sensors.$.num_channels": num_ch,
+        "sensors.$.units": _units
     }
     }
 
     const query = {sensors:{eui:eui}}
-    db.collection("structures").updateMany(query,sensors, function (err, res) {
+    db.collection("structures").updateOne(query,sensors, function (err, res) {
         if (err) throw err;
         //After save message
         console.log("insert 1 row  on collection")

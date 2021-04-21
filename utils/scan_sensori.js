@@ -13,16 +13,16 @@ exports.scanSensori = (db, data, eui) => {
     for (let i = 0; i < num_ch; i++) {
         _units.push(unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)])
     }
-    const sensors = {$set : {
-        "sensors.$.date": new Date(), 
-        "sensors.$.sensor_index": _sensor_index,
-        "sensors.$.serial_number": _serial_number,
-        "sensors.$.num_channels": num_ch,
-        "sensors.$.units": _units
-    }
-    }
+    const sensors = {$push : {
+        "sensors.$.detectors":{
+            date: new Date(), 
+            sensor_index: _sensor_index,
+            serial_number: _serial_number,
+            num_channels: num_ch,
+            units: _units
+    }}}
 
-    const query = {sensors:{eui:eui}}
+    const query = {"sensors.eui":eui}
     db.collection("structures").updateOne(query,sensors, function (err, res) {
         if (err) throw err;
         //After save message

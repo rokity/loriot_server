@@ -13,7 +13,7 @@ exports.scanSensori = (db, data, eui) => {
     for (let i = 0; i < num_ch; i++) {
         _units.push(unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)])
     }
-    const sensors = {$seti : {
+    const sensors = {$set : {
         eui: eui,
         date: new Date(), 
         sensor_index: _sensor_index,

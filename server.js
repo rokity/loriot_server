@@ -25,8 +25,10 @@ client.connect(err => {
 
 app.post('/webhook', (req, res) => {
   const data = req.body['data']
-  if (data == '43') getInfo(req.body['EUI'], appid); //Accensione
-  else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
+  if(data!=null){
+    if (data == '43') getInfo(req.body['EUI'], appid); //Accensione
+    else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
+  }
   return res.sendStatus(200)
 })
 

@@ -13,19 +13,28 @@ exports.scanSensori = (db, data, eui) => {
     for (let i = 0; i < num_ch; i++) {
         _units.push(unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)])
     }
-    const sensors = {$push : {
-        "sensors.$.detectors":{
-            date: new Date(), 
-            sensor_index: _sensor_index,
-            serial_number: _serial_number,
-            num_channels: num_ch,
-            units: _units
-    }}}
-
-    const query = {"sensors.eui":eui}
-    db.collection("structures").updateOne(query,sensors, function (err, res) {
+    //Check if detector index already exist
+    db.collection("structures").findOne({"sensors.eui":eui,"sensors.detectors.sensor_index":_sensor_index},(err,res)=>{
         if (err) throw err;
-        //After save message
-        console.log("insert 1 row  on collection")
-    });
+        console.log(res)
+        if(res==null){
+            console.log("trovato")
+            const sensors = {$push : {
+                "sensors.$.detectors":{
+                    date: new Date(), 
+                    sensor_index: _sensor_index,
+                    serial_number: _serial_number,
+                    num_channels: num_ch,
+                    units: _units
+            }}}
+        
+            const query = {"sensors.eui":eui}
+            db.collection("structures").updateOne(query,sensors, function (err, res) {
+                if (err) throw err;
+                //After save message
+                console.log("insert 1 row  on collection")
+            });
+        }
+    })
+    
 }

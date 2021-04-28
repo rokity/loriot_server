@@ -21,7 +21,6 @@ exports.scanSensori = (db, data, eui) => {
             console.log("trovato")
             const sensors = {$push : {
                 "sensors.$.detectors":{
-                    date: new Date(), 
                     sensor_index: _sensor_index,
                     serial_number: _serial_number,
                     num_channels: num_ch,

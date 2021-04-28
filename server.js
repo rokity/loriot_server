@@ -13,8 +13,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 const appid = "BE7A2562"
 var db;
 
-let flag_get_info = false;
-
 
 client.connect(err => {
   db = client.db("myFirstDatabase");
@@ -60,7 +58,7 @@ app.post('/insert_sensor', (req, res) => {
   const structure_id = req.body["structure_id"]
   var _id = new mongo.ObjectID(structure_id);
   const query = { "_id": _id }
-  var new_values = { $push: { sensors: { eui: eui, detectors:[] } } };
+  var new_values = { $push: { sensors: { eui: eui ,type:"digital", detectors:[] } } };
   db.collection("structures").updateOne(query, new_values, (err, res) => {
     console.log(res)
   })

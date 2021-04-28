@@ -1,9 +1,9 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
 var mongo = require('mongodb');
-const hex_to_ascii = require("./utils/hextoascii.js").hex_to_ascii;
 const getInfo = require("./utils/get_info").getInfo;
 const scanSensori = require("./utils/scan_sensori").scanSensori;
+const busCheck = require("./utils/bus_check").busCheck;
 
 const app = express()
 app.use(express.json());
@@ -26,6 +26,7 @@ app.post('/webhook', (req, res) => {
   if(data!=null){
     if (data == '43') getInfo(req.body['EUI'], appid); //Accensione
     else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
+    else if (data == '62') busCheck(req.body['EUI'], appid);
   }
   return res.sendStatus(200)
 })

@@ -14,18 +14,22 @@ exports.scanSensori = (db, data, eui) => {
         _unit=unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)]
         _channels.push({"name":`CH.${i+1}`,unit:_unit})
     }
-    //Check if detector index already exist
+    last_channel_byte=12+(num_ch*2)
+    let crc=null;
+    if(data.length!=last_channel_byte){
+        crc=data.substring(last_channel_byte,last_channel_byte+(data.length-last_channel_byte))
+    }
+    //Check if detector index already exist, if not exist it'll create
     db.collection("structures").findOne({"sensors.eui":eui,"sensors.detectors.sensor_index":_sensor_index},(err,res)=>{
         if (err) throw err;
         console.log(res)
         if(res==null){
-            console.log("trovato")
             const sensors = {$push : {
                 "sensors.$.detectors":{
                     sensor_index: _sensor_index,
                     serial_number: _serial_number,
                     channels:_channels
-            }}}
+            }},$set:{"sensors.$.crc":crc}}
         
             const query = {"sensors.eui":eui}
             db.collection("structures").updateOne(query,sensors, function (err, res) {

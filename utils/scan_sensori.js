@@ -9,9 +9,10 @@ exports.scanSensori = (db, data, eui) => {
     const sn4 = data.substring(8, 10)
     const _serial_number = `${sn1}${sn2}${sn3}${sn4}`
     const num_ch = parseInt(data.substring(10, 12))
-    let _units = []
+    let _channels = []
     for (let i = 0; i < num_ch; i++) {
-        _units.push(unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)])
+        _unit=unit_measure[parseInt(data.substring(12 + (2 * i), 14 + (2 * i)), 16)]
+        _channels.push({"name":`CH.${i+1}`,unit:_unit})
     }
     //Check if detector index already exist
     db.collection("structures").findOne({"sensors.eui":eui,"sensors.detectors.sensor_index":_sensor_index},(err,res)=>{
@@ -23,8 +24,7 @@ exports.scanSensori = (db, data, eui) => {
                 "sensors.$.detectors":{
                     sensor_index: _sensor_index,
                     serial_number: _serial_number,
-                    num_channels: num_ch,
-                    units: _units
+                    channels:_channels
             }}}
         
             const query = {"sensors.eui":eui}

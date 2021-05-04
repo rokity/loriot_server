@@ -1,5 +1,6 @@
 const unit_measure = require('./unit_measure').unit_measure;
 const hex_to_ascii = require("./hextoascii.js").hex_to_ascii;
+const checkSensoriMancanti = require("./checkSensoriMancanti.js").checkSensoriMancanti;
 
 exports.scanSensori = (db, data, eui) => {
     const _sensor_index = parseInt(data.substring(0, 2))
@@ -18,16 +19,17 @@ exports.scanSensori = (db, data, eui) => {
     let crc=null;
     if(data.length!=last_channel_byte){
         crc=data.substring(last_channel_byte,last_channel_byte+(data.length-last_channel_byte))
+        checkSensoriMancanti(db,_sensor_index,eui,crc)
     }
     //Check if detector index already exist, if not exist it'll create
     db.collection("structures").findOne({"sensors.eui":eui,"sensors.detectors.sensor_index":_sensor_index},(err,res)=>{
         if (err) throw err;
-        console.log(res)
-        if(res==null){
+        if(res==null){            
             const sensors = {$push : {
                 "sensors.$.detectors":{
                     sensor_index: _sensor_index,
                     serial_number: _serial_number,
+                    status:{value:"correct",code:""},
                     channels:_channels
             }},$set:{"sensors.$.crc":crc}}
         

@@ -20,5 +20,6 @@ exports.getInfo = (nodo_digitale_eui,appid) => {
         console.error('error:', error);
         console.log('statusCode:', response && response.statusCode);
         console.log('body:', body);
+        
     })
 }

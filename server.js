@@ -65,7 +65,9 @@ app.post('/insert_sensor', (req, res) => {
   var _id = new mongo.ObjectID(structure_id);
   const query = { "_id": _id }
   var new_values = { $push: { sensors: { eui: eui ,type:"digital", detectors:[] } } };
+  console.log("CIAO")
   db.collection("structures").updateOne(query, new_values, (err, res) => {
+    if(err) throw err;
     console.log(res)
   })
   return res.sendStatus(200)

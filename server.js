@@ -107,6 +107,7 @@ app.get('/reset', (req, res) => {
       console.log('body:', body);
   })
   }
+  return res.sendStatus(200)
 })
 
 
@@ -134,6 +135,7 @@ app.get('/true_reset', (req, res) => {
       console.log('body:', body);
   })
   }
+  return res.sendStatus(200)
 })
 
 
@@ -164,5 +166,6 @@ app.get('/change_settings', (req, res) => {
       console.log('body:', body);
   })
   }
+  return res.sendStatus(200)
 })
 

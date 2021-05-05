@@ -19,6 +19,7 @@ exports.scanSensori = (db, data, eui) => {
     let crc=null;
     if(data.length!=last_channel_byte){
         crc=data.substring(last_channel_byte,last_channel_byte+(data.length-last_channel_byte))
+        console.log("check sensori")
         checkSensoriMancanti(db,_sensor_index,eui,crc)
     }
     //Check if detector index already exist, if not exist it'll create

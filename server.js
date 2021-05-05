@@ -6,6 +6,7 @@ const scanSensori = require("./utils/scan_sensori").scanSensori;
 const busCheck = require("./utils/bus_check").busCheck;
 const updatePacket= require('./utils/update_packet').updatePacket;
 const dataPacket= require("./utils/data_packet").dataPacket;
+const request = require('request')
 
 const app = express()
 app.use(express.json());
@@ -30,8 +31,8 @@ app.post('/webhook', (req, res) => {
     if (data == '43') getInfo(req.body['EUI'], appid); //Accensione
     else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
     else if (data == '62') busCheck(req.body['EUI'], appid);
-    else if (data.substring(0,2)=="75") updatePacket(data,eui,db)
-    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,eui,db)
+    else if (data.substring(0,2)=="75") updatePacket(data,req.body['EUI'],db)
+    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,req.body['EUI'],db)
   }
   return res.sendStatus(200)
 })
@@ -76,9 +77,9 @@ app.post('/insert_sensor', (req, res) => {
 
 app.post('/setup_digital_configuration',(req,res)=>{
     const query = {"sensors.eui":req.body['eui']}
-    var new_values = { $set: { sensors: { eui: req.body['eui'] , userConfig :
-       { sampling_time : req.body['sampling_time'] , vcc : req.body['vcc'] , add_delay: req.body['add_delay']} } } };
+    var new_values = { $set: { "sensors.$.userConfig":  { sampling_time : req.body['sampling_time'] , vcc : req.body['vcc'] , add_delay: req.body['add_delay']} } };
     db.collection("structures").updateOne(query, new_values, (err, res) => {
+      if(err)throw err;
       console.log(res)
     })
     return res.sendStatus(200)

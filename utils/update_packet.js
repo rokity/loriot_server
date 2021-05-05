@@ -1,3 +1,5 @@
+const request = require('request')
+const appid = "BE7A2562"
 
 exports.updatePacket=(data,eui,db) =>
 {
@@ -7,30 +9,37 @@ exports.updatePacket=(data,eui,db) =>
     const query = {"sensors.eui":eui}
     db.collection("structures").findOne(query,(err,res)=>{
         if(err) throw err;
-        if(res.userConfig.vcc!=vcc || res.userConfig.sampling_time!=sampling_time || res.userConfig.add_delay!=add_delay){
-            request.post({
-                url: 'https://eu1.loriot.io/1/rest',
-                headers: {
-                    'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/json'
+        const sensors=res.sensors;
+        for(let i=0;i<sensors.length;i++){
+            if(sensors[i].eui==eui){
+                if(sensors[i].userConfig.vcc!=vcc || sensors[i].userConfig.sampling_time!=sampling_time || sensors[i].userConfig.add_delay!=add_delay){
+                    console.log("update nodo digitale")
+                    request.post({
+                        url: 'https://eu1.loriot.io/1/rest',
+                        headers: {
+                            'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
+                            'Cache-Control': 'no-cache',
+                            'Content-Type': 'application/json'
+                        }
+                        , json: {
+                            cmd: 'tx',
+                            EUI: eui,
+                            port: 2,
+                            confirmed: false,
+                            data: `D0${res['sensors'][i].userConfig.sampling_time}${res['sensors'][i].userConfig.add_delay.toString(16)}${res['sensors'][i].userConfig.vcc.toString(16)}`,
+                            appid: appid
+                        }
+                    }, function (error, response, body) {
+                        console.error('error:', error);
+                        console.log('statusCode:', response && response.statusCode);
+                        console.log('body:', body);
+                    })
                 }
-                , json: {
-                    cmd: 'tx',
-                    EUI: eui,
-                    port: 2,
-                    confirmed: false,
-                    data: `D0${res.userConfig.sampling_time}${res.userConfig.add_delay.toString(16)}${res.userConfig.vcc.toString(16)}`,
-                    appid: appid
-                }
-            }, function (error, response, body) {
-                console.error('error:', error);
-                console.log('statusCode:', response && response.statusCode);
-                console.log('body:', body);
-            })
-        }
+            }            
+        }        
     });
-    if(data.length>7){
+    if(data.length>8){
+        console.log("ci sono errori nei sensori")
         //ci sono errori da gestire
         const data_errors=data.substring(7,data.length)/2
         for(let i=0;i<data_errors.length;i++){

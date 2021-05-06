@@ -41,12 +41,13 @@ exports.updatePacket=(data,eui,db) =>
     if(data.length>8){
         console.log("ci sono errori nei sensori")
         //ci sono errori da gestire
-        const data_errors=data.substring(7,data.length)/2
-        for(let i=0;i<data_errors.length;i++){
-            const byte_error=data_errors.substring(7+(i*2),9+(i*2))
+        const data_errors=data.substring(8,data.length).length/2
+        for(let i=0;i<data_errors;i++){
+            const byte_error=data.substring(8+(i*2),10+(i*2))
             if(byte_error!="00"){
+                console.log("errore sensore")
                 const query={"sensors.eui":eui};
-                const new_values ={$set:{[`sensors.$.detectors.${i}`]: {value:"incorrect",code:byte_error}} }
+                const new_values ={$set:{[`sensors.$.detectors.${i}.status`]: {value:"incorrect",code:byte_error}} }
                 db.collection("structures").updateOne(query,new_values, function (err, res) {
                     if (err) throw err;
                     //After save message

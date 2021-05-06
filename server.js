@@ -27,12 +27,13 @@ client.connect(err => {
 
 app.post('/webhook', (req, res) => {
   const data = req.body['data']
+  const eui=req.body['EUI']
   if(data!=null){
-    if (data == '43') getInfo(req.body['EUI'], appid); //Accensione
-    else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30) scanSensori(db, data, req.body['EUI'])     //Scansione Sensori   
-    else if (data == '62') busCheck(req.body['EUI'], appid);
-    else if (data.substring(0,2)=="75") updatePacket(data,req.body['EUI'],db)
-    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,req.body['EUI'],db)
+    if (data == '43') getInfo(eui, appid); //Accensione
+    else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 &&  parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
+    else if (data == '62') busCheck(eui, appid);
+    else if (data.substring(0,2)=="75") updatePacket(data,eui,db)
+    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,eui,db)
   }
   return res.sendStatus(200)
 })

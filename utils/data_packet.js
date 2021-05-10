@@ -49,9 +49,9 @@ exports.dataPacket = async (data, eui, db) => {
                     temperature: `${first_temperature}.${second_temperature}`,
                     timestamp: _timestamp.toString(),
                 }
-                db.collection("temperatures").insertOne(temperature_row);
+                await db.collection("temperatures").insertOne(temperature_row);
             }
-            db.collection("digitals").insertOne(data_packet);
+            await db.collection("digitals").insertOne(data_packet);
         }
         else {
             channels = channels - digitals.channelsData.length
@@ -74,9 +74,9 @@ exports.dataPacket = async (data, eui, db) => {
                     temperature: `${first_temperature}.${second_temperature}`,
                     timestamp: _timestamp.toString(),
                 }
-                db.collection("temperatures").insertOne(temperature_row);
+                await db.collection("temperatures").insertOne(temperature_row);
             }
-            db.collection("digitals").updateOne(query, { $set: { channelsData: data_packet.channelsData, date: new Date().toString() } });
+            await db.collection("digitals").updateOne(query, { $set: { channelsData: data_packet.channelsData, date: new Date().toString() } });
         }
 
     }

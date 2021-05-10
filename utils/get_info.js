@@ -13,7 +13,7 @@ exports.getInfo = (nodo_digitale_eui,appid) => {
             EUI: nodo_digitale_eui,
             port: 2,
             confirmed: false,
-            data: "0c0303ffff1e010c",
+            data: "0c0303ffff1f010c",
             appid: appid
         }
     }, function (error, response, body) {

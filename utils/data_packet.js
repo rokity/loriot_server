@@ -2,8 +2,10 @@ const HexToFloat32 = require("./hextoascii.js").HexToFloat32;
 const hexToSignedInt = require('./hextoascii').hexToSignedInt
 
 exports.dataPacket = async (data, eui, db) => {
+    console.log("data packet")
     while (data.length != 0) {
         let _sensor_index = parseInt(data.substring(0, 2))
+        console.log("sensors_index",_sensor_index)
         const _timestamp = new Date(parseInt(data.substring(4, 12), 16) * 1000)
         let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
         sensors=sensors['sensors']
@@ -15,18 +17,21 @@ exports.dataPacket = async (data, eui, db) => {
             eui: eui,
             date: new Date().toString()
         }
-        
+        console.log("sensors",sensors)
         for (let i = 0; i < sensors.length; i++) {
             if (sensors[i].eui == eui)
                 detectors = sensors[i].detectors;
         }
+        console.log("serial detectors",detectors[_sensor_index].serial_number)
         data_packet['detectorMsn'] = detectors[_sensor_index].serial_number
         let channels = detectors[_sensor_index].channels.length;
+        console.log("channels",channels)
         const query = { sensor_index: _sensor_index, eui: eui, timestamp: _timestamp.toString() }
         data = data.substring(12, data.length)
         const digitals = await db.collection("digitals").findOne(query)
         if (digitals == null) {
             //there aren't detector data similar in the db with the same timestamp
+            console.log("digitals null")
             for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     data_packet['channelsData'].push(HexToFloat32(data.substring(0, 8)).toString())
@@ -34,6 +39,7 @@ exports.dataPacket = async (data, eui, db) => {
                 }
             }
             if (data.length == 4 || data.length != 0) {
+                console.log("temperatura digital == null")
                 const first_temperature = hexToSignedInt(data.substring(0, 2))
                 const second_temperature = parseInt(data.substring(2, 4), 16)
                 data = data.substring(4, data.length)
@@ -50,6 +56,7 @@ exports.dataPacket = async (data, eui, db) => {
         else {
             channels = channels - digitals.channelsData.length
             data_packet.channelsData = digitals.channelsData
+            console.log("digital != null")
             for (let i = 0; i < channels || data.length != 0; i++) {
                 if (data.length != 4) {
                     data_packet['channelsData'].push(HexToFloat32(data.substring(0, 8)).toString())
@@ -57,6 +64,7 @@ exports.dataPacket = async (data, eui, db) => {
                 }
             }
             if (data.length == 4 || data.length != 0) {
+                console.log("temperatura digital!=null")
                 const first_temperature = hexToSignedInt(data.substring(0, 2))
                 const second_temperature = parseInt(data.substring(2, 4), 16)
                 data = data.substring(4, data.length)

@@ -29,7 +29,7 @@ client.connect(err => {
 app.post('/webhook', (req, res) => {
   const data = req.body['data']
   const eui=req.body['EUI']
-  res.sendStatus(200)
+  
   if(data!=null){
     if (data == '43') getInfo(eui, appid); //Accensione
     else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 &&  parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
@@ -37,6 +37,7 @@ app.post('/webhook', (req, res) => {
     else if (data.substring(0,2)=="75") updatePacket(data,eui,db)
     else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,eui,db)
   }
+  return res.sendStatus(200)
 })
 
 app.post('/insert_structure', (req, res) => {

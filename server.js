@@ -19,10 +19,10 @@ var db;
 
 client.connect(err => {
   db = client.db("myFirstDatabase");
-  app.setTimeout(500000);
-  app.listen(port, () => {
+  let server=app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
   })
+  server.setTimeout(500000)
 });
 
 

@@ -34,7 +34,7 @@ app.post('/webhook', (req, res) => {
     else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 &&  parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
     else if (data == '62') busCheck(eui, appid);
     else if (data.substring(0,2)=="75") updatePacket(data,eui,db)
-    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  dataPacket(data,eui,db)
+    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1)  await dataPacket(data,eui,db)
   }
 })
 

@@ -27,18 +27,25 @@ client.connect(err => {
 
 
 app.post('/webhook', (req, res) => {
-  const data = req.body['data']
-  const eui=req.body['EUI']
-  console.log(req.body)
-  res.sendStatus(200)
-  res.end()
-  if(data!=null){
-    if (data == '43') getInfo(eui, appid); //Accensione
-    else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 &&  parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
-    else if (data == '62') busCheck(eui, appid);
-    else if (data.substring(0,2)=="75") updatePacket(data,eui,db)
-    else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 &&  parseInt(data.substring(2, 4)) > -1) dataPacket(data,eui,db)
-  }  
+  if (req.body['cmd'] == "rx") {
+    const data = req.body['data']
+    const eui = req.body['EUI']
+    console.log(req.body)
+    res.sendStatus(200)
+    res.end()
+    if (data != null) {
+      if (data == '43') getInfo(eui, appid); //Accensione
+      else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
+      else if (data == '62') busCheck(eui, appid);
+      else if (data.substring(0, 2) == "75") updatePacket(data, eui, db)
+      else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 && parseInt(data.substring(2, 4)) > -1) dataPacket(data, eui, db)
+    }
+  }
+  else{
+    res.sendStatus(200)
+    res.end()
+  }
+
 })
 
 app.post('/insert_structure', (req, res) => {

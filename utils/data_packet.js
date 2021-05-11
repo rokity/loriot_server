@@ -38,7 +38,6 @@ exports.dataPacket = async (data, eui, db) => {
             if (data.length == 4 || data.length != 0) {
                 const first_temperature = hexToSignedInt(data.substring(0, 2))
                 const second_temperature = parseInt(data.substring(2, 4), 16) >=10 ? parseInt(data.substring(2, 4), 16) : `0${parseInt(data.substring(2, 4), 16)}`
-                console.log("temperatura",`${first_temperature}.${second_temperature}`)
                 data = data.substring(4, data.length)
                 const temperature_row = {
                     eui: eui,
@@ -69,7 +68,6 @@ exports.dataPacket = async (data, eui, db) => {
                     temperature: `${first_temperature}.${second_temperature}`,
                     timestamp: _timestamp.toString(),
                 }
-                console.log("temperatura",`${first_temperature}.${second_temperature}`)
                 db.collection("temperatures").insertOne(temperature_row);
             }
             db.collection("digitals").updateOne(query, { $set: { channelsData: data_packet.channelsData, date: new Date().toString() } });

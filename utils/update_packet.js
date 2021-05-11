@@ -48,11 +48,7 @@ exports.updatePacket=(data,eui,db) =>
                 console.log("errore sensore")
                 const query={"sensors.eui":eui};
                 const new_values ={$set:{[`sensors.$.detectors.${i}.status`]: {value:"incorrect",code:byte_error}} }
-                db.collection("structures").updateOne(query,new_values, function (err, res) {
-                    if (err) throw err;
-                    //After save message
-                    console.log("insert 1 row  on collection")
-                });
+                db.collection("structures").updateOne(query,new_values);
             }
         }
     }

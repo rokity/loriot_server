@@ -29,6 +29,7 @@ client.connect(err => {
 app.post('/webhook', (req, res) => {
   const data = req.body['data']
   const eui=req.body['EUI']
+  console.log(req.body)
   res.sendStatus(200)
   res.end()
   if(data!=null){

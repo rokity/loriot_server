@@ -3,6 +3,7 @@ const appid = "BE7A2562"
 
 exports.updatePacket=(db,data,eui) =>
 {
+    console.log("updatePacket")
     const sampling_time= data.substring(2,4) // il sampling_time è formatto in esadecimale come nella tabella 2.1.1 del documento
     const vcc = parseInt(data.substring(4,6),16)
     const add_delay= parseInt(data.substring(6,8),16)

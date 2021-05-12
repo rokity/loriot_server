@@ -1,6 +1,10 @@
 const request = require('request')
 
 exports.getInfo = (nodo_digitale_eui,appid) => {
+    db.collection("structures").findOne({ "sensors.eui": nodo_digitale_eui }, new_values, (err, res) => {
+        if(err) throw err;
+        
+      })
     request.post({
         url: 'https://eu1.loriot.io/1/rest',
         headers: {

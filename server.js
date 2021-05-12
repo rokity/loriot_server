@@ -34,6 +34,7 @@ app.post('/webhook', (req, res) => {
   res.sendStatus(200)
   res.end()
   if (req.body['cmd'] == "rx") {
+    console.log("data packet")
     const data = req.body['data']
     const eui = req.body['EUI']
     if (data != null) {

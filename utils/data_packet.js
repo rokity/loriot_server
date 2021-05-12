@@ -42,13 +42,15 @@ exports.dataPacket = async (db, data, eui) => {
                 }
             }
             if (data.length == 4 || data.length != 0) {
+                let first_temperature=null;
+                let second_temperature=null;
                 if (data.substring(0, 4) != "ffff") {
-                    const first_temperature = hexToSignedInt(data.substring(0, 2))
-                    const second_temperature = parseInt(data.substring(2, 4), 16) >= 10 ? parseInt(data.substring(2, 4), 16) : `0${parseInt(data.substring(2, 4), 16)}`
+                    first_temperature = hexToSignedInt(data.substring(0, 2))
+                    second_temperature = parseInt(data.substring(2, 4), 16) >= 10 ? parseInt(data.substring(2, 4), 16) : `0${parseInt(data.substring(2, 4), 16)}`
                 }
                 else {
-                    const first_temperature = "NaN";
-                    const second_temperature = "NaN";
+                    first_temperature = "NaN";
+                    second_temperature = "NaN";
                 }
                 data = data.substring(4, data.length)
                 const temperature_row = {
@@ -77,13 +79,15 @@ exports.dataPacket = async (db, data, eui) => {
                 }
             }
             if (data.length == 4 || data.length != 0) {
+                let first_temperature=null;
+                let second_temperature=null;
                 if (data.substring(0, 4) != "ffff") {
-                    const first_temperature = hexToSignedInt(data.substring(0, 2))
-                    const second_temperature = parseInt(data.substring(2, 4), 16) >= 10 ? parseInt(data.substring(2, 4), 16) : `0${parseInt(data.substring(2, 4), 16)}`
+                    first_temperature = hexToSignedInt(data.substring(0, 2))
+                    second_temperature = parseInt(data.substring(2, 4), 16) >= 10 ? parseInt(data.substring(2, 4), 16) : `0${parseInt(data.substring(2, 4), 16)}`
                 }
                 else {
-                    const first_temperature = "NaN";
-                    const second_temperature = "NaN";
+                    first_temperature = "NaN";
+                    second_temperature = "NaN";
                 }
                 data = data.substring(4, data.length)
                 const temperature_row = {

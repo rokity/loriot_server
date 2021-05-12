@@ -69,6 +69,9 @@ app.post('/webhook', (req, res) => {
       }
     }
   }
+  else{
+    console.log("non è rx")
+  }
 })
 
 //Per inserire una struttura, dove risiede il nodo digitale

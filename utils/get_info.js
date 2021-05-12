@@ -1,33 +1,40 @@
 const request = require('request')
 
-exports.getInfo = (nodo_digitale_eui,appid) => {
-    db.collection("structures").findOne({ "sensors.eui": nodo_digitale_eui }, new_values, (err, res) => {
-        if(err) throw err;
-        else{
-            
-            request.post({
-                url: 'https://eu1.loriot.io/1/rest',
-                headers: {
-                    'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/json'
-                }
-                , json: {
-                    cmd: 'tx',
-                    EUI: nodo_digitale_eui,
-                    port: 2,
-                    confirmed: false,
-                    data: "0c0303ffff1f010c",
-                    appid: appid
-                }
-            }, function (error, response, body) {
-                console.error('error:', error);
-                console.log('statusCode:', response && response.statusCode);
-                console.log('body:', body);
-                
-            })
+exports.getInfo = async (nodo_digitale_eui, appid) => {
+    let sensor = await db.collection("structures").findOne({ "sensors.eui": nodo_digitale_eui });
+    sensor = sensor['sensors']
+    for (let i = 0; i < sensor.length; i++) {
+        if (sensor[i].eui == eui) {
+            sensor = sensor[i];
+            break;
         }
-        
-      })
-    
+    }
+    if(sensor['crc']==null || sensor['crc']==undefined)
+    {
+        sensor['crc']="ffff"
+    }
+    request.post({
+        url: 'https://eu1.loriot.io/1/rest',
+        headers: {
+            'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/json'
+        }
+        , json: {
+            cmd: 'tx',
+            EUI: nodo_digitale_eui,
+            port: 2,
+            confirmed: false,
+            data: `0c${sensor['InitDel']}${sensor['IncrDel']}${sensor['crc']}${sensor['HighestAddr']}${sensor['userConfig']['sampling_time']}${sensor['userConfig']['vcc']}`,
+            appid: appid
+        }
+    }, function (error, response, body) {
+        console.error('error:', error);
+        console.log('statusCode:', response && response.statusCode);
+        console.log('body:', body);
+
+    })
 }
+        
+      
+    

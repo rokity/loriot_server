@@ -64,9 +64,12 @@ exports.dataPacket = async (db, data, eui) => {
             db.collection("digitals").insertOne(data_packet, (err, res) => { if (err) throw err; });
         }
         else {
+            console.log("ELSEEE")
             channels = channels - digitals.channelsData.length
+            console.log(channels)
             data_packet.channelsData = digitals.channelsData
-            for (let i = 0; i < channels || data.length != 0; i++) {
+            console.log(data_packet.channelsData)
+            for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     if (data.substring(0, 8) != "ffffffff") {
                         data_packet['channelsData'].push(HexToFloat32(data.substring(0, 8)).toString())
@@ -78,6 +81,7 @@ exports.dataPacket = async (db, data, eui) => {
                     }
                 }
             }
+            console.log(data_packet['channelsData'])
             if (data.length == 4 || data.length != 0) {
                 let first_temperature=null;
                 let second_temperature=null;

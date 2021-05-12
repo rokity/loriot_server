@@ -4,7 +4,7 @@ exports.getInfo = async (db,nodo_digitale_eui, appid) => {
     let sensor = await db.collection("structures").findOne({ "sensors.eui": nodo_digitale_eui });
     sensor = sensor['sensors']
     for (let i = 0; i < sensor.length; i++) {
-        if (sensor[i].eui == eui) {
+        if (sensor[i].eui == nodo_digitale_eui) {
             sensor = sensor[i];
             break;
         }

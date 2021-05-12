@@ -44,9 +44,10 @@ exports.scanSensori = (db, data, eui) => {
             }
             else{
                 console.log("update sensori , crc diverso")
+                let new_values=null
                 if(crc==null)
                 {
-                    let new_values = {$set:{[`sensors.$.detectors.${_sensor_index}`]: {
+                    new_values = {$set:{[`sensors.$.detectors.${_sensor_index}`]: {
                         sensor_index: _sensor_index,
                         serial_number: _serial_number,
                         status: { value: "correct", code: "" },
@@ -55,7 +56,7 @@ exports.scanSensori = (db, data, eui) => {
                 }                    
                 else
                 {
-                    let new_values ={$set:{[`sensors.$.detectors.${_sensor_index}`]: {
+                    new_values ={$set:{[`sensors.$.detectors.${_sensor_index}`]: {
                         sensor_index: _sensor_index,
                         serial_number: _serial_number,
                         status: { value: "correct", code: "" },

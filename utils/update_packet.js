@@ -1,7 +1,7 @@
 const request = require('request')
 const appid = "BE7A2562"
 
-exports.updatePacket=(data,eui,db) =>
+exports.updatePacket=(db,data,eui) =>
 {
     const sampling_time= data.substring(2,4) // il sampling_time è formatto in esadecimale come nella tabella 2.1.1 del documento
     const vcc = parseInt(data.substring(4,6),16)

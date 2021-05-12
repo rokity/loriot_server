@@ -28,9 +28,9 @@ exports.updatePacket=(db,data,eui) =>
                             appid: appid
                         }
                     }, function (error, response, body) {
-                        console.error('error:', error);
-                        console.log('statusCode:', response && response.statusCode);
-                        console.log('body:', body);
+                        console.error("errore update package", error);
+                        console.log('statusCode update package:', response && response.statusCode);
+                        console.log('body update package:', body);
                     })
                 }
                 break;

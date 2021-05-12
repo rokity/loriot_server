@@ -42,6 +42,18 @@ exports.scanSensori = (db, data, eui) => {
                     sensors["$set"] = { "sensors.$.crc": crc }
                 db.collection("structures").updateOne({ "sensors.eui": eui }, sensors, function (err, res) {if (err) throw err;});
             }
+            else{
+                const new_values ={$set:{[`sensors.$.detectors.${_sensor_index}`]: {
+                    sensor_index: _sensor_index,
+                    serial_number: _serial_number,
+                    status: { value: "correct", code: "" },
+                    channels: _channels
+                }} }
+                db.collection("structures").updateOne({ "sensors.eui": eui },new_values)
+                if(crc!=null)
+                    sensors["$set"] = { "sensors.$.crc": crc }                
+
+            }
         })
     }
 

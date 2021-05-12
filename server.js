@@ -23,7 +23,7 @@ let db;
 
 client.connect(err => {
   db = client.db(process.env.MONGO_DB);
-  let server = app.listen(process.env.PORT, process.env.HOST, () => {
+  let server = app.listen(process.env.PORT || 5000, process.env.HOST, () => {
     console.log(`Example app listening at http://${process.env.HOST}:${process.env.PORT}`)
   })
   server.setTimeout(500000)

@@ -13,6 +13,7 @@ exports.getInfo = async (db,nodo_digitale_eui, appid) => {
     {
         sensor['crc']="ffff"
     }
+    console.log(`0c${sensor['InitDel']}${sensor['IncrDel']}${sensor['crc']}${sensor['HighestAddr']}${sensor['userConfig']['sampling_time']}${sensor['userConfig']['vcc']}`)
     request.post({
         url: 'https://eu1.loriot.io/1/rest',
         headers: {

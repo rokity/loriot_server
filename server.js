@@ -57,9 +57,9 @@ app.post('/insert_structure', (req, res) => {
     name: req.body['name'], address: req.body['address'], installDate: req.body['installDate'],
     coordinates: req.body['coordinates'], fddEnabled: req.body['fddEnabled'],
     type: req.body['type'], userConfig: req.body['userConfig'], spans: req.body["spans"],
-    ensors: req.body["sensors"]
+    sensors: req.body["sensors"]
   }
-  db.collection("structures").insertOne(structure, (err, res) => {
+  db.collection("structures").insertOne(structure, (err, _res) => {
      if (err) throw err 
      else{
       res.sendStatus(200)
@@ -78,7 +78,7 @@ app.post('/insert_sensor', (req, res) => {
       },
     }
   };
-  db.collection("structures").updateOne(query, new_values, (err, res) => {
+  db.collection("structures").updateOne(query, new_values, (err, _res) => {
      if (err) throw err 
      else{
       res.sendStatus(200)
@@ -179,7 +179,7 @@ app.post('/change_settings', (req, res) => {
               { sampling_time: req.body['sampling_time'], vcc: req.body['vcc'], add_delay: req.body['add_delay'] }
           }
         }
-        db.collection("structures").updateOne({ "sensors.eui": req.body.eui }, new_values, (err, res) => {
+        db.collection("structures").updateOne({ "sensors.eui": req.body.eui }, new_values, (err, _res) => {
           if (err) {
             res.send(err)
             res.sendStatus(500)

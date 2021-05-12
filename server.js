@@ -1,49 +1,53 @@
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
 var mongo = require('mongodb');
+const request = require('request')
+const dotenv = require('dotenv');
+dotenv.config();
+
 const getInfo = require("./utils/get_info").getInfo;
 const scanSensori = require("./utils/scan_sensori").scanSensori;
 const busCheck = require("./utils/bus_check").busCheck;
 const updatePacket= require('./utils/update_packet').updatePacket;
 const dataPacket= require("./utils/data_packet").dataPacket;
-const request = require('request')
+
 
 const app = express()
 app.use(express.json());
-const port = process.env.PORT || 3000;
-const uri = "mongodb+srv://ciao:ciao@cluster0.zofui.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+//Solitamente l'uri di un db mongo è mongodb:// , questo è un caso particolare perchè mi sto collegando ad una DNS seed list
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASW}@${process.env.MONGO_HOST}/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-const appid = "BE7A2562"
+const appid = process.env.APPID;
 var db;
 
 
 client.connect(err => {
-  db = client.db("myFirstDatabase");
-  let server=app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+  db = client.db(process.env.MONGO_DB);
+  let server=app.listen(process.env.PORT, () => {
+    console.log(`Example app listening at http://localhost:${process.env.PORT}`)
   })
   server.setTimeout(500000)
 });
 
 
 app.post('/webhook', (req, res) => {
+  res.sendStatus(200)
+  res.end()
   if (req.body['cmd'] == "rx") {
     const data = req.body['data']
     const eui = req.body['EUI']
-    console.log(req.body)
-    res.sendStatus(200)
-    res.end()
     if (data != null) {
-      if (data == '43') getInfo(eui, appid); //Accensione
-      else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)     //Scansione Sensori   
+      //Accensione e richiesta scan sensori
+      if (data == '43') getInfo(eui, appid); 
+      //Scansione Sensori
+      else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) > 12) scanSensori(db, data, eui)        
+      //Bus Check, dopo CRC
       else if (data == '62') busCheck(eui, appid);
+      //Pacchetto Update
       else if (data.substring(0, 2) == "75") updatePacket(data, eui, db)
+      // Pacchetto Dati
       else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 && parseInt(data.substring(2, 4)) > -1) dataPacket(data, eui, db)
     }
-  }
-  else{
-    res.sendStatus(200)
-    res.end()
   }
 
 })

@@ -22,7 +22,6 @@ exports.scanSensori = (db, data, eui) => {
         if (data.length == 4) {
             crc = data.substring(0,4)
             data=""
-            console.log("check sensori",crc)
             checkSensoriMancanti(db, _sensor_index, eui, crc)
         }
         //Check if detector index already exist, if not exist it'll create
@@ -40,15 +39,8 @@ exports.scanSensori = (db, data, eui) => {
                     },
                 }
                 if(crc!=null)
-                {
                     sensors["$set"] = { "sensors.$.crc": crc }
-                }               
-                const query = { "sensors.eui": eui }
-                db.collection("structures").updateOne(query, sensors, function (err, res) {
-                    if (err) throw err;
-                    //After save message
-                    console.log("insert 1 row  on collection")
-                });
+                db.collection("structures").updateOne({ "sensors.eui": eui }, sensors, function (err, res) {if (err) throw err;});
             }
         })
     }

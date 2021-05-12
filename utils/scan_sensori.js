@@ -43,6 +43,7 @@ exports.scanSensori = (db, data, eui) => {
                 db.collection("structures").updateOne({ "sensors.eui": eui }, sensors, function (err, res) {if (err) throw err;});
             }
             else{
+                console.log("update sensori , crc diverso")
                 if(crc==null)
                     let new_values ={$set:{[`sensors.$.detectors.${_sensor_index}`]: {
                         sensor_index: _sensor_index,

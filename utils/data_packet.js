@@ -3,7 +3,7 @@ const hexToSignedInt = require('./hextoascii').hexToSignedInt
 
 exports.dataPacket = async (db, data, eui) => {
     while (data.length != 0) {
-        let _sensor_index = parseInt(data.substring(0, 2))
+        let _sensor_index = parseInt(data.substring(0, 2),16)
         const _timestamp = new Date(parseInt(data.substring(4, 12), 16) * 1000)
         let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
         sensors = sensors['sensors']
@@ -64,11 +64,8 @@ exports.dataPacket = async (db, data, eui) => {
             db.collection("digitals").insertOne(data_packet, (err, res) => { if (err) throw err; });
         }
         else {
-            console.log("ELSEEE")
             channels = channels - digitals.channelsData.length
-            console.log(channels)
             data_packet.channelsData = digitals.channelsData
-            console.log(data_packet.channelsData)
             for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     if (data.substring(0, 8) != "ffffffff") {
@@ -81,7 +78,6 @@ exports.dataPacket = async (db, data, eui) => {
                     }
                 }
             }
-            console.log(data_packet['channelsData'])
             if (data.length == 4 || data.length != 0) {
                 let first_temperature=null;
                 let second_temperature=null;

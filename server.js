@@ -34,7 +34,6 @@ app.post('/webhook', (req, res) => {
   res.sendStatus(200)
   res.end()
   if (req.body['cmd'] == "rx") {
-    console.log("data packet")
     const data = req.body['data']
     const eui = req.body['EUI']
     if (data != null) {
@@ -195,5 +194,30 @@ app.post('/change_settings', (req, res) => {
       }
     })
   }
+})
+
+
+app.post("/set_get_info",(req,res)=>{
+  if (req.body.InitDel != undefined && req.body.InitDel != null
+    && req.body.IncrDel != undefined && req.body.IncrDel != null
+    && req.body.HighestAddr != undefined && req.body.HighestAddr != null
+    && req.body.eui != undefined && req.body.eui != null) {
+      const new_values = {$set: {
+          "sensors.$.get_info":
+            { InitDel: req.body['InitDel'], IncrDel: req.body['IncrDel'], HighestAddr: req.body['HighestAddr'] }
+        }}
+        db.collection("structures").updateOne({ "sensors.eui": req.body.eui }, new_values, (err, _res) => {
+          if (err) {
+            res.send(err)
+            res.sendStatus(500)
+            res.end()
+            throw err;
+          }
+          else {
+            res.sendStatus(200)
+            res.end();
+          }
+        })
+    }
 })
 

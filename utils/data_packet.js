@@ -2,6 +2,7 @@ const HexToFloat32 = require("./hextoascii.js").HexToFloat32;
 const hexToSignedInt = require('./hextoascii').hexToSignedInt
 
 exports.dataPacket = async (db, data, eui) => {
+    console.log("data packet")
     while (data.length != 0) {
         let _sensor_index = parseInt(data.substring(0, 2))
         const _timestamp = new Date(parseInt(data.substring(4, 12), 16) * 1000)

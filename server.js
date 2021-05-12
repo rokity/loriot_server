@@ -18,7 +18,7 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASW}@${process.env.MONGO_HOST}/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const appid = process.env.APPID;
-var db;
+let db;
 
 
 client.connect(err => {
@@ -49,9 +49,9 @@ app.get('/webhook', (req, res) => {
       else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 && parseInt(data.substring(2, 4)) > -1) dataPacket(db, data, eui)
     }
   }
-
 })
-//Per inserire una struttura, tipo Capannone
+
+//Per inserire una struttura, dove risiede il nodo digitale
 app.post('/insert_structure', (req, res) => {
   const structure = {
     name: req.body['name'], address: req.body['address'], installDate: req.body['installDate'],

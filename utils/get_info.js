@@ -1,6 +1,7 @@
 const request = require('request')
 
 exports.getInfo = (nodo_digitale_eui,appid) => {
+    console.log("get_info")
     request.post({
         url: 'https://eu1.loriot.io/1/rest',
         headers: {

@@ -144,7 +144,7 @@ app.get('/true_reset', (req, res) => {
   }
 })
 
-//Per cambiare le impostazioni di un nodo digitale (sampling_time,vcc,add_delay)
+//Per cambiare le impostazioni di un nodo digitale (sampling_time,vcc,add_delay) , runtime
 app.post('/change_settings', (req, res) => {
   if (req.body.sampling_time != undefined && req.body.sampling_time != null
     && req.body.add_delay != undefined && req.body.add_delay != null

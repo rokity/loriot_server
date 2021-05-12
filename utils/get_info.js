@@ -1,6 +1,6 @@
 const request = require('request')
 
-exports.getInfo = async (nodo_digitale_eui, appid) => {
+exports.getInfo = async (db,nodo_digitale_eui, appid) => {
     let sensor = await db.collection("structures").findOne({ "sensors.eui": nodo_digitale_eui });
     sensor = sensor['sensors']
     for (let i = 0; i < sensor.length; i++) {

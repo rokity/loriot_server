@@ -40,7 +40,7 @@ app.post('/webhook', (req, res) => {
       //Accensione e richiesta scan sensori
       if (data == '43') 
       {
-        getInfo(eui, appid);
+        getInfo(db,eui, appid);
       }
       //Scansione Sensori
       else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) > 12) 

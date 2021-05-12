@@ -24,7 +24,7 @@ exports.updatePacket=(db,data,eui) =>
                             EUI: eui,
                             port: 2,
                             confirmed: false,
-                            data: `D0${res['sensors'][i].userConfig.sampling_time}${res['sensors'][i].userConfig.add_delay.toString(16)}${res['sensors'][i].userConfig.vcc.toString(16)}`,
+                            data: `D0${sensors[i].userConfig.sampling_time}${sensors[i].userConfig.add_delay}${sensors[i].userConfig.vcc}`,
                             appid: appid
                         }
                     }, function (error, response, body) {

@@ -6,6 +6,8 @@ exports.dataPacket = async (db, data, eui) => {
         let _sensor_index = parseInt(data.substring(0, 2),16)
         let channel_begin = parseInt(data.substring(2, 4),16)
         const _timestamp = new Date(parseInt(data.substring(4, 12), 16) * 1000)
+        console.log(_timestamp)
+        console.log(_timestamp.toString())
         let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
         sensors = sensors['sensors']
         let detectors = null

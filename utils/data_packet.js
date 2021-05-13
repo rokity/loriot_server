@@ -4,6 +4,7 @@ const hexToSignedInt = require('./hextoascii').hexToSignedInt
 exports.dataPacket = async (db, data, eui) => {
     while (data.length != 0) {
         let _sensor_index = parseInt(data.substring(0, 2),16)
+        let channel_begin = parseInt(data.substring(2, 4),16)
         const _timestamp = new Date(parseInt(data.substring(4, 12), 16) * 1000)
         let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
         sensors = sensors['sensors']
@@ -28,6 +29,7 @@ exports.dataPacket = async (db, data, eui) => {
         const digitals = await db.collection("digitals").findOne(query)
         if (digitals == null) {
             //there aren't detector data similar in the db with the same timestamp
+            channels=channels-channel_begin;
             for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     if (data.substring(0, 8) != "ffffffff") {

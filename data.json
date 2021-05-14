@@ -32,6 +32,8 @@
     "data": "0053111111021b1b"
 }
 
+scan a tre sensori 
+0053111111021b1b0144333333071f1f1f1f1f1f1f024444444401096edf
 
 
 pacchetto update error
@@ -44,3 +46,93 @@ pacchetto dati con temperatura negativa
 000160941a763e0e1435F419
 
 pacchetto dati con temperatura positiva
+
+//Copy from NoSQLBooster for MongoDB free edition. This message does not appear if you are using a registered version.
+
+sensors[0]:{
+    "eui": "C0EE400001025558",
+    "type": "digital",
+    "detectors": [
+      {
+        "sensor_index": 0,
+        "serial_number": "S111111",
+        "status": {
+          "value": "correct",
+          "code": ""
+        },
+        "channels": [
+          {
+            "name": "CH.1",
+            "unit": "Sinα"
+          },
+          {
+            "name": "CH.2",
+            "unit": "Sinα"
+          }
+        ]
+      },
+      {
+        "sensor_index": 1,
+        "serial_number": "D333333",
+        "status": {
+          "value": "incorrect",
+          "code": "02"
+        },
+        "channels": [
+          {
+            "name": "CH.1",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.2",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.3",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.4",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.5",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.6",
+            "unit": "mm"
+          },
+          {
+            "name": "CH.7",
+            "unit": "mm"
+          }
+        ]
+      },
+      {
+        "sensor_index": 2,
+        "serial_number": "D444444",
+        "status": {
+          "value": "correct",
+          "code": ""
+        },
+        "channels": [
+          {
+            "name": "CH.1",
+            "unit": "mmH2O"
+          }
+        ]
+      }
+    ],
+    "userConfig": {
+      "sampling_time": "01",
+      "vcc": "0c",
+      "add_delay": "05"
+    },
+    "crc": "6edf",
+    "get_info": {
+      "InitDel": "03",
+      "IncrDel": "03",
+      "HighestAddr": "1f"
+    }
+  }

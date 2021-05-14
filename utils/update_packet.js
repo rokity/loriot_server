@@ -32,7 +32,7 @@ exports.updatePacket = async (db, data, eui) => {
                     console.log('body update package:', body);
                 })
             }
-            let detectors=sensors[i].detectors
+            detectors=sensors[i].detectors
             break;
         }
     }

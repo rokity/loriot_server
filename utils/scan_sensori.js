@@ -5,6 +5,7 @@ const checkSensoriMancanti = require("./checkSensoriMancanti.js").checkSensoriMa
 exports.scanSensori = async (db, data, eui) => {
     while (data.length != 0) {
         let _sensor_index = parseInt(data.substring(0, 2))
+        console.log("_sensor_index", _sensor_index)
         let sn1 = hex_to_ascii(data.substring(2, 4))
         let sn2 = data.substring(4, 6)
         let sn3 = data.substring(6, 8)
@@ -24,69 +25,68 @@ exports.scanSensori = async (db, data, eui) => {
             checkSensoriMancanti(db, _sensor_index, eui, crc)
         }
         //Check if detector index already exist, if not exist it'll create
-       await db.collection("structures").findOne({ "sensors.eui": eui }, async (err, res) => {
-            if (err) throw err;
-            
-            let detectors=null
-            let id_configuration=null
-            for (let i = 0; i < res.sensors.length; i++) {
-                if (res.sensors[i].eui == eui) {
-                    detectors = res.sensors[i].detectors;
-                    if (res.sensors[i]['id_configuration'] != null && res.sensors[i]['id_configuration'] != undefined)
-                            id_configuration = res.sensors[i].id_configuration
-                    break;
-                }
+        let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
+        sensors=sensors.sensors
+        let detectors = null
+        let id_configuration = null
+        for (let i = 0; i < sensors.length; i++) {
+            if (sensors[i].eui == eui) {
+                detectors = sensors[i].detectors;
+                if (sensors[i]['id_configuration'] != null && sensors[i]['id_configuration'] != undefined)
+                    id_configuration = sensors[i].id_configuration
+                break;
             }
-            let flag_present=false;
-            for(let i=0;i<detectors.length;i++){
-                if(detectors[i]['sensor_index']==_sensor_index)
-                {
-                    flag_present=true;
-                    break;
-                }                    
+        }
+        let flag_present = false;
+        for (let i = 0; i < detectors.length; i++) {
+            if (detectors[i]['sensor_index'] == _sensor_index) {
+                flag_present = true;
+                break;
             }
-            if (flag_present==false) {
-                let sensors = {
-                    $push: {
-                        "sensors.$.detectors": {
-                            sensor_index: _sensor_index,
-                            serial_number: _serial_number,
-                            status: { value: "correct", code: "" },
-                            channels: _channels
-                        }
-                    },
-                }
-                if (crc != null) {
-                    sensors["$set"] = { "sensors.$.crc": crc }
-                }
-                await db.collection("structures").updateOne({ "sensors.eui": eui }, sensors);
-            }
-            else {
-                console.log("update sensori , crc diverso")
-                let old_configuration = {
-                    "id_configuration": id_configuration,
-                    "old_configuration": detectors
-                }
-                id_configuration++
-                let new_values = {
-                    $set: {
-                        'sensors.$.detectors': [{
-                            sensor_index: _sensor_index,
-                            serial_number: _serial_number,
-                            status: { value: "correct", code: "" },
-                            channels: _channels
-                        }],
-                        "sensors.$.id_configuration": id_configuration,
-                        "sensors.$.crc": crc
-                    },
-                    $push: {
-                        "sensors.$.old_configurations": old_configuration
+        }
+        console.log("detectors", detectors)
+        if (flag_present == false) {
+            console.log("first time")
+            let new_value = {
+                $push: {
+                    "sensors.$.detectors": {
+                        sensor_index: _sensor_index,
+                        serial_number: _serial_number,
+                        status: { value: "correct", code: "" },
+                        channels: _channels
                     }
-                }
-                await db.collection("structures").updateOne({ "sensors.eui": eui }, new_values)
-
+                },
             }
-        })
+            if (crc != null) {
+                new_value["$set"] = { "sensors.$.crc": crc }
+            }
+            await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
+        }
+        else {
+            console.log("update sensori , crc diverso")
+            let old_configuration = {
+                "id_configuration": id_configuration,
+                "old_configuration": detectors
+            }
+            id_configuration++
+            let new_values = {
+                $set: {
+                    'sensors.$.detectors': [{
+                        sensor_index: _sensor_index,
+                        serial_number: _serial_number,
+                        status: { value: "correct", code: "" },
+                        channels: _channels
+                    }],
+                    "sensors.$.id_configuration": id_configuration,
+                    "sensors.$.crc": crc
+                },
+                $push: {
+                    "sensors.$.old_configurations": old_configuration
+                }
+            }
+            await db.collection("structures").updateOne({ "sensors.eui": eui }, new_values)
+
+        }
     }
 
 }

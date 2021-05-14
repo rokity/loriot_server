@@ -33,14 +33,15 @@ exports.dataPacket = async (db, data, eui) => {
         if (digitals == null) {
             //there aren't detector data similar in the db with the same timestamp
             channels=channels-channel_begin;
+            data_packet['channelsData']=new Array(channels)
             for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     if (data.substring(0, 8) != "ffffffff") {
-                        data_packet['channelsData'].push(HexToFloat32(data.substring(0, 8)).toString())
+                        data_packet['channelsData'][i]=HexToFloat32(data.substring(0, 8)).toString()
                         data = data.substring(8, data.length);
                     }
                     else {
-                        data_packet['channelsData'].push("NaN");
+                        data_packet['channelsData'][i]="NaN";
                         data = data.substring(8, data.length);
                     }
 
@@ -74,11 +75,11 @@ exports.dataPacket = async (db, data, eui) => {
             for (let i = 0; (i < channels) && (data.length != 0); i++) {
                 if (data.length != 4) {
                     if (data.substring(0, 8) != "ffffffff") {
-                        data_packet['channelsData'].push(HexToFloat32(data.substring(0, 8)).toString())
+                        data_packet['channelsData'][i]=HexToFloat32(data.substring(0, 8)).toString()
                         data = data.substring(8, data.length);
                     }
                     else {
-                        data_packet['channelsData'].push("NaN");
+                        data_packet['channelsData'][i]="NaN";
                         data = data.substring(8, data.length);
                     }
                 }

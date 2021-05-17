@@ -42,7 +42,7 @@ exports.dataPacket = async (db, data, eui) => {
                         data = data.substring(8, data.length);
                     }
                     else {
-                        data_packet['channelsData'][i]="NaN";
+                        data_packet['channelsData'][i]=null;
                         data = data.substring(8, data.length);
                     }
 
@@ -81,7 +81,7 @@ exports.dataPacket = async (db, data, eui) => {
                         data = data.substring(8, data.length);
                     }
                     else {
-                        data_packet['channelsData'][i]="NaN";
+                        data_packet['channelsData'][i]=null;
                         data = data.substring(8, data.length);
                     }
                 }

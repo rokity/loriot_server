@@ -43,7 +43,7 @@ app.post('/webhook', (req, res) => {
         getInfo(db,eui, appid);
       }
       //Scansione Sensori
-      else if (data.length > 12 && parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 30 && parseInt(data.substring(2, 4)) > 12) 
+      else if (data.length > 12 && parseInt(data.substring(0, 2),16) > -1 && parseInt(data.substring(0, 2),16) < 30 && parseInt(data.substring(2, 4),16) > 12) 
       {
         scanSensori(db, data, eui)
       }
@@ -58,8 +58,9 @@ app.post('/webhook', (req, res) => {
         updatePacket(db, data, eui)
       }
       // Pacchetto Dati
-      else if (parseInt(data.substring(0, 2)) > -1 && parseInt(data.substring(0, 2)) < 11 && parseInt(data.substring(2, 4)) < 30 && parseInt(data.substring(2, 4)) > -1) 
+      else if (parseInt(data.substring(0, 2),16) > -1 && parseInt(data.substring(0, 2),16) < 11 && parseInt(data.substring(2, 4),16) < 30 && parseInt(data.substring(2, 4),16) > -1) 
       {
+        console.log("pacchetto dati")
         dataPacket(db, data, eui)
       }
     }

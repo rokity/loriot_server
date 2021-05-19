@@ -91,6 +91,7 @@ app.post('/insert_sensor', (req, res) => {
     $push: {
       sensors: {
         eui: req.body['eui'], type: "digital", detectors: [],old_configurations:[],id_configuration:0,
+        confirmed:true,
         userConfig: { sampling_time: req.body['sampling_time'], vcc: req.body['vcc'], add_delay: req.body['add_delay'] }
       },
     }

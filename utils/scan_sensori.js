@@ -3,6 +3,20 @@ const hex_to_ascii = require("./hextoascii.js").hex_to_ascii;
 const checkSensoriMancanti = require("./checkSensoriMancanti.js").checkSensoriMancanti;
 
 exports.scanSensori = async (db, data, eui) => {
+    let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
+    sensors = sensors.sensors
+    let id_configuration = null
+    let detectors = null
+    let confirmed=false;
+    for (let i = 0; i < sensors.length; i++) {
+        if (sensors[i].eui == eui) {
+            detectors = sensors[i].detectors;
+            confirmed=sensors[i].confirmed;
+            if (sensors[i]['id_configuration'] != null && sensors[i]['id_configuration'] != undefined)
+                id_configuration = sensors[i].id_configuration
+            break;
+        }
+    }
     while (data.length != 0) {
         let _sensor_index = parseInt(data.substring(0, 2))
         console.log("_sensor_index", _sensor_index)
@@ -18,35 +32,12 @@ exports.scanSensori = async (db, data, eui) => {
             _channels.push({ "name": `CH.${i + 1}`, unit: _unit })
         }
         data = data.substring(12 + (2 * num_ch), data.length)
-        let crc = null;
-        if (data.length == 4) {
-            crc = data.substring(0, 4)
-            data = ""
-            checkSensoriMancanti(db, _sensor_index, eui, crc)
-        }
         //Check if detector index already exist, if not exist it'll create
-        let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
-        sensors=sensors.sensors
-        let detectors = null
-        let id_configuration = null
-        for (let i = 0; i < sensors.length; i++) {
-            if (sensors[i].eui == eui) {
-                detectors = sensors[i].detectors;
-                if (sensors[i]['id_configuration'] != null && sensors[i]['id_configuration'] != undefined)
-                    id_configuration = sensors[i].id_configuration
-                break;
-            }
-        }
-        let flag_present = false;
-        for (let i = 0; i < detectors.length; i++) {
-            if (detectors[i]['sensor_index'] == _sensor_index) {
-                flag_present = true;
-                break;
-            }
-        }
-        console.log("detectors", detectors)
-        if (flag_present == false) {
-            console.log("first time")
+        
+        let crc=null
+        if(data.length==4)
+            crc = data.substring(0, 4)
+        if (confirmed == false) {
             let new_value = {
                 $push: {
                     "sensors.$.detectors": {
@@ -57,9 +48,9 @@ exports.scanSensori = async (db, data, eui) => {
                     }
                 },
             }
-            if (crc != null) {
+            if (crc != null) 
                 new_value["$set"] = { "sensors.$.crc": crc }
-            }
+            
             await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
         }
         else {
@@ -78,7 +69,8 @@ exports.scanSensori = async (db, data, eui) => {
                         channels: _channels
                     }],
                     "sensors.$.id_configuration": id_configuration,
-                    "sensors.$.crc": crc
+                    "sensors.$.crc": crc,
+                    "sensors.$.confirmed":false
                 },
                 $push: {
                     "sensors.$.old_configurations": old_configuration
@@ -86,6 +78,10 @@ exports.scanSensori = async (db, data, eui) => {
             }
             await db.collection("structures").updateOne({ "sensors.eui": eui }, new_values)
 
+        }
+        if (data.length == 4) {
+            data = ""
+            checkSensoriMancanti(db,_sensor_index, eui, crc)
         }
     }
 

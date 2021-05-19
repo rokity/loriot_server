@@ -2,7 +2,7 @@ const unit_measure = require('./unit_measure').unit_measure;
 const hex_to_ascii = require("./hextoascii.js").hex_to_ascii;
 const checkSensoriMancanti = require("./checkSensoriMancanti.js").checkSensoriMancanti;
 
-exports.scanSensori = async (db, data, eui) => {
+exports.scanSensori = async (db, data, eui,appid) => {
     let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
     sensors = sensors.sensors
     let id_configuration = null
@@ -38,6 +38,7 @@ exports.scanSensori = async (db, data, eui) => {
         if(data.length==4)
             crc = data.substring(0, 4)
         if (confirmed == false) {
+            console.log("confirmed == false",_sensor_index)
             let new_value = {
                 $push: {
                     "sensors.$.detectors": {
@@ -54,7 +55,7 @@ exports.scanSensori = async (db, data, eui) => {
             await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
         }
         else {
-            console.log("update sensori , crc diverso")
+            console.log("confirmed == true",_sensor_index)
             let old_configuration = {
                 "id_configuration": id_configuration,
                 "old_configuration": detectors
@@ -77,11 +78,11 @@ exports.scanSensori = async (db, data, eui) => {
                 }
             }
             await db.collection("structures").updateOne({ "sensors.eui": eui }, new_values)
-
+            confirmed=false
         }
         if (data.length == 4) {
             data = ""
-            checkSensoriMancanti(db,_sensor_index, eui, crc)
+            checkSensoriMancanti(db,_sensor_index, eui, appid)
         }
     }
 

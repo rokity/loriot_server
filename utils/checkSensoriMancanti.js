@@ -1,11 +1,8 @@
-const unit_measure = require('./unit_measure').unit_measure;
-const hex_to_ascii = require("./hextoascii.js").hex_to_ascii;
 const request = require('request');
 const ascii_to_hex= require("./hextoascii").ascii_to_hex;
-const appid = "BE7A2562"
 
 
-exports.checkSensoriMancanti =  async (db, _sensor_index,eui) => {
+exports.checkSensoriMancanti =  async (db, _sensor_index,eui,appid) => {
     let payload_indici_mancanti="62"
     let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
     sensors=sensors.sensors
@@ -29,7 +26,7 @@ exports.checkSensoriMancanti =  async (db, _sensor_index,eui) => {
             detectors_index.pop(detectors[i]['sensor_index'])
         detectors_index.forEach(
             sensor_index => payload_indici_mancanti = payload_indici_mancanti + `${ascii_to_hex(sensor_index)}`)
-        console.log("nella scan c'è un sensore mancante")
+        console.log("nella scan c'è un sensore mancante",payload_indici_mancanti)
         // request.post({
         //     url: 'https://eu1.loriot.io/1/rest',
         //     headers: {

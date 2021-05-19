@@ -45,12 +45,12 @@ app.post('/webhook', (req, res) => {
       //Scansione Sensori
       else if (data.length > 12 && parseInt(data.substring(0, 2),16) > -1 && parseInt(data.substring(0, 2),16) < 30 && parseInt(data.substring(2, 4),16) > 12) 
       {
-        scanSensori(db, data, eui)
+        scanSensori(db, data, eui,appid)
       }
       //Bus Check, dopo CRC
       else if (data == '62') 
       {
-        busCheck(eui, appid);
+        busCheck(eui, appid,db);
       }
       //Pacchetto Update
       else if (data.substring(0, 2) == "75") 

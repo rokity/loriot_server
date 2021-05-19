@@ -27,25 +27,25 @@ exports.checkSensoriMancanti =  async (db, _sensor_index,eui,appid) => {
         detectors_index.forEach(
             sensor_index => payload_indici_mancanti = payload_indici_mancanti + `${ascii_to_hex(sensor_index)}`)
         console.log("nella scan c'è un sensore mancante",payload_indici_mancanti)
-        // request.post({
-        //     url: 'https://eu1.loriot.io/1/rest',
-        //     headers: {
-        //         'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
-        //         'Cache-Control': 'no-cache',
-        //         'Content-Type': 'application/json'
-        //     }
-        //     , json: {
-        //         cmd: 'tx',
-        //         EUI: eui,
-        //         port: 2,
-        //         confirmed: false,
-        //         data: payload_indici_mancanti,
-        //         appid: appid
-        //     }
-        // }, function (error, response, body) {
-        //     console.error('error:', error);
-        //     console.log('statusCode:', response && response.statusCode);
-        //     console.log('body:', body);
-        // })
+        request.post({
+            url: 'https://eu1.loriot.io/1/rest',
+            headers: {
+                'Authorization': 'Bearer vnolYgAAAA1ldTEubG9yaW90LmlvDiJiwQnkwkVoNcNP-ZepCA==',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json'
+            }
+            , json: {
+                cmd: 'tx',
+                EUI: eui,
+                port: 2,
+                confirmed: false,
+                data: payload_indici_mancanti,
+                appid: appid
+            }
+        }, function (error, response, body) {
+            console.error('error:', error);
+            console.log('statusCode:', response && response.statusCode);
+            console.log('body:', body);
+        })
     }
 };

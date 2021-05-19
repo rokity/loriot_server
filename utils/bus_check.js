@@ -37,7 +37,7 @@ exports.busCheck = async (eui,appid,db) => {
         }
         , json: {
             cmd: 'tx',
-            EUI: nodo_digitale_eui,
+            EUI: eui,
             port: 2,
             confirmed: false,
             data: payload_indici_mancanti,

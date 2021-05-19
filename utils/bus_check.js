@@ -2,7 +2,7 @@ const request = require('request')
 const ascii_to_hex= require("./hextoascii").ascii_to_hex;
 
 exports.busCheck = async (eui,appid,db) => {
-    let payload_indici_mancanti="=0b"
+    let payload_indici_mancanti="0b"
     let sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
     sensors=sensors.sensors
     let detectors = null

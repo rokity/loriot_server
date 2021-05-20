@@ -58,7 +58,8 @@ exports.scanSensori = async (db, data, eui,appid) => {
             console.log("confirmed == true",_sensor_index)
             let old_configuration = {
                 "id_configuration": id_configuration,
-                "old_configuration": detectors
+                "old_configuration": detectors,
+                "date": new Date().toString()
             }
             id_configuration++
             let new_values = {

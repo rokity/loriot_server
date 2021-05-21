@@ -30,7 +30,7 @@ client.connect(err => {
 });
 
 
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async (req, res) => {
   res.sendStatus(200)
   res.end()
   if (req.body['cmd'] == "rx") {

@@ -51,8 +51,25 @@ exports.scanSensori = async (db, data, eui,appid) => {
             }
             if (crc != null) 
                 new_value["$set"] = { "sensors.$.crc": crc }
-            
-            await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
+            let _sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
+            let _detectors = null
+            let sensor_exist=false
+            //Check Pacchetto Doppione
+            for (let i = 0; i < _sensors.length; i++) {
+                if (_sensors[i].eui == eui) {
+                    _detectors = _sensors[i].detectors;
+                    for(let j=0;j<_detectors.length;j++)
+                    {
+                        if(_detectors[j].sensor_index==_sensor_index)
+                            {
+                                sensor_exist=true;
+                            }
+                    }
+                    break;
+                }
+            }
+            if(sensor_exist==false)
+                await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
         }
         else {
             console.log("confirmed == true",_sensor_index)
@@ -83,7 +100,7 @@ exports.scanSensori = async (db, data, eui,appid) => {
         }
         if (data.length == 4) {
             data = ""
-            checkSensoriMancanti(db,_sensor_index, eui, appid)
+            // checkSensoriMancanti(db,_sensor_index, eui)
         }
     }
 

@@ -28,6 +28,10 @@ exports.busCheck = async (eui,appid,db) => {
             sensor_index => payload_indici_mancanti = payload_indici_mancanti + `${ascii_to_hex(sensor_index)}`)
         console.log("buscheck payload_indici_mancanti",payload_indici_mancanti)
     }
+    else{
+        let new_values = {$set: {"sensors.$.confirmed":true}}
+        await db.collection("structures").updateOne({ "sensors.eui": eui }, new_values)
+    }
     request.post({
         url: 'https://eu1.loriot.io/1/rest',
         headers: {

@@ -52,6 +52,7 @@ exports.scanSensori = async (db, data, eui,appid) => {
             if (crc != null) 
                 new_value["$set"] = { "sensors.$.crc": crc }
             let _sensors = await db.collection("structures").findOne({ "sensors.eui": eui });
+            _sensors=_sensors.sensors;
             let _detectors = null
             let sensor_exist=false
             //Check Pacchetto Doppione
@@ -63,11 +64,14 @@ exports.scanSensori = async (db, data, eui,appid) => {
                         if(_detectors[j].sensor_index==_sensor_index)
                             {
                                 sensor_exist=true;
+                                break;
                             }
                     }
                     break;
+                    
                 }
             }
+            console.log(sensor_exist)
             if(sensor_exist==false)
                 await db.collection("structures").updateOne({ "sensors.eui": eui }, new_value);
         }

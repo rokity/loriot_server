@@ -34,6 +34,7 @@ app.post('/webhook', (req, res) => {
   res.sendStatus(200)
   res.end()
   if (req.body['cmd'] == "rx") {
+    await db.collection("raw_data").insertOne({"data":req.body['data'],"date":new Date().toString(),"eui":req.body['EUI']});
     const data = req.body['data']
     const eui = req.body['EUI']
     if (data != null) {
